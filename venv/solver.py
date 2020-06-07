@@ -4,9 +4,10 @@ def solve(sudoku):
     if not place:
         return True
 
-    row, col = place
+    row,col = place
+
     for x in range(1,10):
-        if valid(sudoku, row, col, x):
+        if valid(sudoku, x, place):
             sudoku[row][col] = x
 
             if solve(sudoku):
@@ -23,23 +24,23 @@ def find_empty(sudoku):
                 return (i,j)
     return None
 
-def valid(soduoku, row, col, value):
+def valid(sudoku, value, pos):
     #check row
     for i in range(len(sudoku[0])):
-        if sudoku[row][i] == value:
+        if sudoku[pos[0]][i] == value and pos[1] != i:
             return False
 
     #check column
     for i in range(len(sudoku)):
-        if sudoku[i][col] == value:
+        if sudoku[i][pos[1]] == value and pos[0] != i:
             return False
 
     #check block
-    rowStart = row // 3 * 3
-    columnStart = col // 3 * 3
+    rowStart = pos[0] // 3 * 3
+    columnStart = pos[1] // 3 * 3
     for i in range(3):
         for j in range(3):
-            if sudoku[rowStart+i][columnStart+j] == value:
+            if sudoku[rowStart+i][columnStart+j] == value and pos != (rowStart+i,columnStart+j):
                 return False
     return True
 
@@ -56,19 +57,3 @@ def printSudoku(sudoku):
                 print(sudoku[i][j])
             else:
                 print(str(sudoku[i][j]) + " ", end="")
-
-
-sudoku = [
-    [6,5,0,0,0,8,0,0,0],
-    [7,0,1,0,4,0,0,0,0],
-    [0,0,0,0,0,0,0,8,0],
-    [0,0,0,0,3,1,9,0,6],
-    [0,0,4,0,7,0,3,0,0],
-    [1,0,7,6,2,0,0,0,0],
-    [0,4,0,0,0,0,0,0,0],
-    [0,0,0,0,8,0,6,0,2],
-    [0,0,0,9,0,0,0,5,8],
-]
-
-solve(sudoku)
-printSudoku(sudoku)
